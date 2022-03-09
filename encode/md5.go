@@ -1,4 +1,4 @@
-package md5
+package goutils
 
 import (
     "crypto/md5"
