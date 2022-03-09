@@ -1,3 +1,6 @@
+// Copyright 2022 smallmuou.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
 package goutils
 
 import (
@@ -5,28 +8,41 @@ import (
     "fmt"
     "io"
     "crypto/md5"
+    "encoding/base64"
 )
 
-func Md5(content string) (string, error) {
+/**
+* generate string md5
+*
+* param: content    content to convert
+* return: md5str    md5 hex string
+*/
+func Md5(content string) (md5str string) {
     h := md5.New()
     h.Write([]byte(content))
 
-    //将 []byte 转为 string
-    md5str := fmt.Sprintf("%x", h.Sum(nil))
-
-    return md5str, nil
+    return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-func Md5File(filename string) (string, error) {
-    //打开文件
+/**
+* generate file md5
+*
+* param:    filename    file path
+* return:   md5str      md5 hex string
+            error       error
+*/
+func Md5File(filename string) (md5str string, err error) {
+    //open file
     f, err := os.Open(filename)
     if nil != err {
         fmt.Println(err)
         return "", err
     }
+
+    //delay close file
     defer f.Close()
 
-    //计算 MD5 值，返回 []byte
+    //generate md5
     md5Handle := md5.New()
     _, err = io.Copy(md5Handle, f)
     if nil != err {
@@ -35,7 +51,26 @@ func Md5File(filename string) (string, error) {
     }
     md := md5Handle.Sum(nil)
 
-    //将 []byte 转为 string
-    md5str := fmt.Sprintf("%x", md)
-    return md5str, nil
+    return fmt.Sprintf("%x", md), nil
+}
+
+/**
+* base64 encode
+*
+* param:    data        the data to convert
+* return:   base64str   string
+*/
+func Base64Encode(data []byte) (base64str string) {
+    return base64.StdEncoding.EncodeToString(data)
+}
+
+/**
+* base64 decode
+*
+* param:    data        the data to convert
+* return:   data        decoded data
+            err         error
+*/
+func Base64Decode(content string) (data []byte, err error)  {
+    return base64.StdEncoding.DecodeString(content)
 }
