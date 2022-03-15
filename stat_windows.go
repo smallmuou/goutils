@@ -1,3 +1,5 @@
+package goutils
+
 import (
 	"os"
 	"syscall"
